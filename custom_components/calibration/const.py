@@ -1,16 +1,16 @@
-"""Compensation constants."""
-DOMAIN = "compensation"
+"""Calibration constants."""
+DOMAIN = "calibration"
 
-SENSOR = "compensation"
+SENSOR = "calibration"
 
-CONF_COMPENSATION = "compensation"
+CONF_CALIBRATION = "calibration"
 CONF_DATAPOINTS = "data_points"
 CONF_DEGREE = "degree"
 CONF_PRECISION = "precision"
 CONF_POLYNOMIAL = "polynomial"
 
-DATA_COMPENSATION = "compensation_data"
+DATA_CALIBRATION = "calibration_data"
 
 DEFAULT_DEGREE = 1
-DEFAULT_NAME = "Compensation"
+DEFAULT_NAME = "Calibration"
 DEFAULT_PRECISION = 2

@@ -1,4 +1,4 @@
-"""The Compensation integration."""
+"""The Calibration integration."""
 import logging
 import warnings
 
@@ -16,12 +16,12 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.discovery import async_load_platform
 
 from .const import (
-    CONF_COMPENSATION,
+    CONF_CALIBRATION,
     CONF_DATAPOINTS,
     CONF_DEGREE,
     CONF_POLYNOMIAL,
     CONF_PRECISION,
-    DATA_COMPENSATION,
+    DATA_CALIBRATION,
     DEFAULT_DEGREE,
     DEFAULT_PRECISION,
     DOMAIN,
@@ -40,7 +40,7 @@ def datapoints_greater_than_degree(value: dict) -> dict:
     return value
 
 
-COMPENSATION_SCHEMA = vol.Schema(
+CALIBRATION_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_SOURCE): cv.entity_id,
         vol.Required(CONF_DATAPOINTS): [
@@ -60,7 +60,7 @@ COMPENSATION_SCHEMA = vol.Schema(
 CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema(
-            {cv.slug: vol.All(COMPENSATION_SCHEMA, datapoints_greater_than_degree)}
+            {cv.slug: vol.All(CALIBRATION_SCHEMA, datapoints_greater_than_degree)}
         )
     },
     extra=vol.ALLOW_EXTRA,
@@ -68,11 +68,11 @@ CONFIG_SCHEMA = vol.Schema(
 
 
 async def async_setup(hass, config):
-    """Set up the Compensation sensor."""
-    hass.data[DATA_COMPENSATION] = {}
+    """Set up the Calibration sensor."""
+    hass.data[DATA_CALIBRATION] = {}
 
-    for compensation, conf in config.get(DOMAIN).items():
-        _LOGGER.debug("Setup %s.%s", DOMAIN, compensation)
+    for calibration, conf in config.get(DOMAIN).items():
+        _LOGGER.debug("Setup %s.%s", DOMAIN, calibration)
 
         degree = conf[CONF_DEGREE]
 
@@ -89,13 +89,13 @@ async def async_setup(hass, config):
                 except FloatingPointError as error:
                     _LOGGER.error(
                         "Setup of %s encountered an error, %s",
-                        compensation,
+                        calibration,
                         error,
                     )
                 for warning in all_warnings:
                     _LOGGER.warning(
                         "Setup of %s encountered a warning, %s",
-                        compensation,
+                        calibration,
                         str(warning.message).lower(),
                     )
 
@@ -105,14 +105,14 @@ async def async_setup(hass, config):
             }
             data[CONF_POLYNOMIAL] = np.poly1d(coefficients)
 
-            hass.data[DATA_COMPENSATION][compensation] = data
+            hass.data[DATA_CALIBRATION][calibration] = data
 
             hass.async_create_task(
                 async_load_platform(
                     hass,
                     SENSOR_DOMAIN,
                     DOMAIN,
-                    {CONF_COMPENSATION: compensation},
+                    {CONF_CALIBRATION: calibration},
                     config,
                 )
             )

@@ -1,6 +1,6 @@
 {
-  "domain": "compensation",
-  "name": "Compensation",
+  "domain": "calibration",
+  "name": "Calibration",
   "documentation": "https://github.com/lymanepp/homeassistant-calibration",
   "issues": "https://github.com/lymanepp/homeassistant-calibration/issues",
   "version": "0.0.0",

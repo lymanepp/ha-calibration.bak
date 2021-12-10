@@ -1,4 +1,4 @@
-"""Support for compensation sensor."""
+"""Support for calibration sensor."""
 import logging
 
 from homeassistant.components.sensor import SensorEntity
@@ -14,10 +14,10 @@ from homeassistant.core import callback
 from homeassistant.helpers.event import async_track_state_change_event
 
 from .const import (
-    CONF_COMPENSATION,
+    CONF_CALIBRATION,
     CONF_POLYNOMIAL,
     CONF_PRECISION,
-    DATA_COMPENSATION,
+    DATA_CALIBRATION,
     DEFAULT_NAME,
 )
 
@@ -29,12 +29,12 @@ ATTR_SOURCE_ATTRIBUTE = "source_attribute"
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the Compensation sensor."""
+    """Set up the Calibration sensor."""
     if discovery_info is None:
         return
 
-    compensation = discovery_info[CONF_COMPENSATION]
-    conf = hass.data[DATA_COMPENSATION][compensation]
+    calibration = discovery_info[CONF_CALIBRATION]
+    conf = hass.data[DATA_CALIBRATION][calibration]
 
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
@@ -44,7 +44,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     async_add_entities(
         [
-            CompensationSensor(
+            CalibrationSensor(
                 conf.get(CONF_UNIQUE_ID),
                 name,
                 source,
@@ -57,8 +57,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     )
 
 
-class CompensationSensor(SensorEntity):
-    """Representation of a Compensation sensor."""
+class CalibrationSensor(SensorEntity):
+    """Representation of a Calibration sensor."""
 
     def __init__(
         self,
@@ -70,7 +70,7 @@ class CompensationSensor(SensorEntity):
         polynomial,
         unit_of_measurement,
     ):
-        """Initialize the Compensation sensor."""
+        """Initialize the Calibration sensor."""
         self._source_entity_id = source
         self._precision = precision
         self._source_attribute = attribute
@@ -87,7 +87,7 @@ class CompensationSensor(SensorEntity):
             async_track_state_change_event(
                 self.hass,
                 [self._source_entity_id],
-                self._async_compensation_sensor_state_listener,
+                self._async_calibration_sensor_state_listener,
             )
         )
 
@@ -128,7 +128,7 @@ class CompensationSensor(SensorEntity):
         return self._unit_of_measurement
 
     @callback
-    def _async_compensation_sensor_state_listener(self, event):
+    def _async_calibration_sensor_state_listener(self, event):
         """Handle sensor state changes."""
         if (new_state := event.data.get("new_state")) is None:
             return
