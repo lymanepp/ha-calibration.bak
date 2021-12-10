@@ -12,5 +12,5 @@ CONF_POLYNOMIAL = "polynomial"
 DATA_CALIBRATION = "calibration_data"
 
 DEFAULT_DEGREE = 1
-DEFAULT_NAME = "Calibration"
+DEFAULT_NAME = "Calibrated"
 DEFAULT_PRECISION = 2

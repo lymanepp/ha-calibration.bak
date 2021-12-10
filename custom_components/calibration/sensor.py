@@ -5,6 +5,8 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import (
     ATTR_UNIT_OF_MEASUREMENT,
     CONF_ATTRIBUTE,
+    CONF_DEVICE_CLASS,
+    CONF_FRIENDLY_NAME,
     CONF_SOURCE,
     CONF_UNIQUE_ID,
     CONF_UNIT_OF_MEASUREMENT,
@@ -38,9 +40,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
-    name = f"{DEFAULT_NAME} {source}"
-    if attribute is not None:
-        name = f"{name} {attribute}"
+    name = conf.get(CONF_FRIENDLY_NAME)
+    if not name:
+        name = f"{DEFAULT_NAME} {source}"
+        if attribute is not None:
+            name = f"{name} {attribute}"
 
     async_add_entities(
         [
@@ -51,6 +55,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
                 attribute,
                 conf[CONF_PRECISION],
                 conf[CONF_POLYNOMIAL],
+                conf.get(CONF_DEVICE_CLASS),
                 conf.get(CONF_UNIT_OF_MEASUREMENT),
             )
         ]
@@ -68,12 +73,14 @@ class CalibrationSensor(SensorEntity):
         attribute,
         precision,
         polynomial,
+        device_class,
         unit_of_measurement,
     ):
         """Initialize the Calibration sensor."""
         self._source_entity_id = source
         self._precision = precision
         self._source_attribute = attribute
+        self._device_class = device_class
         self._unit_of_measurement = unit_of_measurement
         self._poly = polynomial
         self._coefficients = polynomial.coefficients.tolist()
@@ -132,6 +139,11 @@ class CalibrationSensor(SensorEntity):
         """Handle sensor state changes."""
         if (new_state := event.data.get("new_state")) is None:
             return
+
+        if self._device_class is None and self._source_attribute is None:
+            self._device_class = new_state.attributes.get(
+                ATTR_DEVICE_CLASS
+            )
 
         if self._unit_of_measurement is None and self._source_attribute is None:
             self._unit_of_measurement = new_state.attributes.get(
