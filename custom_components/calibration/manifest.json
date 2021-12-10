@@ -1,0 +1,10 @@
+{
+  "domain": "compensation",
+  "name": "Compensation",
+  "documentation": "https://github.com/lymanepp/homeassistant-calibration",
+  "issues": "https://github.com/lymanepp/homeassistant-calibration/issues",
+  "version": "0.0.0",
+  "requirements": ["numpy==1.21.4"],
+  "codeowners": ["@lymanepp"],
+  "iot_class": "calculated"
+}
