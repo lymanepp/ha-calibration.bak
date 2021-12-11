@@ -36,21 +36,20 @@ Platform | Description
 
 ***
 
-[integration_blueprint]: https://github.com/custom-components/integration_blueprint
-[buymecoffee]: https://www.buymeacoffee.com/ludeeus
+[integration_blueprint]: https://github.com/lymanepp/homeassistant-calibration
+[buymecoffee]: https://www.buymeacoffee.com/lymanepp
 [buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/custom-components/integration_blueprint.svg?style=for-the-badge
-[commits]: https://github.com/custom-components/integration_blueprint/commits/master
+[commits-shield]: https://img.shields.io/github/commit-activity/y/lymanepp/homeassistant-calibration.svg?style=for-the-badge
+[commits]: https://github.com/lymanepp/homeassistant-calibration/commits/master
 [hacs]: https://hacs.xyz
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [discord]: https://discord.gg/Qa5fW2R
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
-[exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/
-[license]: https://github.com/custom-components/integration_blueprint/blob/main/LICENSE
-[license-shield]: https://img.shields.io/github/license/custom-components/integration_blueprint.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-Joakim%20Sørensen%20%40ludeeus-blue.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/custom-components/integration_blueprint.svg?style=for-the-badge
-[releases]: https://github.com/custom-components/integration_blueprint/releases
-[user_profile]: https://github.com/ludeeus
+[license]: https://github.com/lymanepp/homeassistant-calibration/blob/main/LICENSE
+[license-shield]: https://img.shields.io/github/license/lymanepp/homeassistant-calibration.svg?style=for-the-badge
+[maintenance-shield]: https://img.shields.io/badge/maintainer-Lyman%20Epp%20%40lymanepp-blue.svg?style=for-the-badge
+[releases-shield]: https://img.shields.io/github/release/lymanepp/homeassistant-calibration.svg?style=for-the-badge
+[releases]: https://github.com/lymanepp/homeassistant-calibration/releases
+[user_profile]: https://github.com/lymanepp
