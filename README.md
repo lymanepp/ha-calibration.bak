@@ -13,7 +13,7 @@ ha_platforms:
   - sensor
 ---
 
-The Calibration integration consumes the state from other sensors. It exports the compensated value as state and the following values as attributes: `entity_id` and `coefficients`.  A single polynomial, linear by default, is fit to all data points provided.
+The Calibration integration consumes the state from other sensors. It exports the calibrated value as state and the following values as attributes: `entity_id` and `coefficients`.  A single polynomial, linear by default, is fit to all data points provided.
 
 ## Configuration
 
@@ -37,7 +37,7 @@ source:
   required: true
   type: string
 data_points:
-  description: "The collection of data point conversions with the format `[uncompensated_value, compensated_value]`.  e.g., `[1.0, 2.1]`. The number of required data points is equal to the polynomial `degree` + 1. For example, a linear calibration (with `degree: 1`) requires at least 2 data points."
+  description: "The collection of data point conversions with the format `[uncalibrated_value, calibrated_value]`.  e.g., `[1.0, 2.1]`. The number of required data points is equal to the polynomial `degree` + 1. For example, a linear calibration (with `degree: 1`) requires at least 2 data points."
   required: true
   type: list
 unique_id:
