@@ -3,6 +3,7 @@ import logging
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import (
+    ATTR_DEVICE_CLASS,
     ATTR_UNIT_OF_MEASUREMENT,
     CONF_ATTRIBUTE,
     CONF_DEVICE_CLASS,
@@ -49,7 +50,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async_add_entities(
         [
             CalibrationSensor(
-                conf.get(CONF_UNIQUE_ID),
+                calibration,
                 name,
                 source,
                 attribute,
@@ -67,7 +68,7 @@ class CalibrationSensor(SensorEntity):
 
     def __init__(
         self,
-        unique_id,
+        id,
         name,
         source,
         attribute,
@@ -85,7 +86,8 @@ class CalibrationSensor(SensorEntity):
         self._poly = polynomial
         self._coefficients = polynomial.coefficients.tolist()
         self._state = None
-        self._unique_id = unique_id
+        self._unique_id = id
+        self._entity_id = id
         self._name = name
 
     async def async_added_to_hass(self):
@@ -130,6 +132,11 @@ class CalibrationSensor(SensorEntity):
         return ret
 
     @property
+    def device_class(self):
+        """Return the class of this entity."""
+        return self._device_class
+
+    @property
     def native_unit_of_measurement(self):
         """Return the unit the value is expressed in."""
         return self._unit_of_measurement
@@ -140,15 +147,15 @@ class CalibrationSensor(SensorEntity):
         if (new_state := event.data.get("new_state")) is None:
             return
 
-        if self._device_class is None and self._source_attribute is None:
-            self._device_class = new_state.attributes.get(
-                ATTR_DEVICE_CLASS
-            )
-
-        if self._unit_of_measurement is None and self._source_attribute is None:
-            self._unit_of_measurement = new_state.attributes.get(
-                ATTR_UNIT_OF_MEASUREMENT
-            )
+        if self._source_attribute is None:
+            if self._device_class is None:
+                self._device_class = new_state.attributes.get(
+                    ATTR_DEVICE_CLASS
+                )
+            if self._unit_of_measurement is None:
+                self._unit_of_measurement = new_state.attributes.get(
+                    ATTR_UNIT_OF_MEASUREMENT
+                )
 
         try:
             if self._source_attribute:
