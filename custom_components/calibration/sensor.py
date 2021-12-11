@@ -22,6 +22,7 @@ from .const import (
     CONF_PRECISION,
     DATA_CALIBRATION,
     DEFAULT_NAME,
+    DOMAIN,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -39,6 +40,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     calibration = discovery_info[CONF_CALIBRATION]
     conf = hass.data[DATA_CALIBRATION][calibration]
 
+    unique_id = conf.get(CONF_UNIQUE_ID) or calibration
+    entity_id = f"{DOMAIN}.{calibration}"
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
     name = conf.get(CONF_FRIENDLY_NAME)
@@ -50,7 +53,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async_add_entities(
         [
             CalibrationSensor(
-                calibration,
+                unique_id,
+                entity_id,
                 name,
                 source,
                 attribute,
@@ -68,7 +72,8 @@ class CalibrationSensor(SensorEntity):
 
     def __init__(
         self,
-        id,
+        unique_id,
+        entity_id,
         name,
         source,
         attribute,
@@ -86,9 +91,9 @@ class CalibrationSensor(SensorEntity):
         self._poly = polynomial
         self._coefficients = polynomial.coefficients.tolist()
         self._state = None
-        self._unique_id = id
-        self._entity_id = id
+        self._unique_id = unique_id
         self._name = name
+        self.entity_id = entity_id
 
     async def async_added_to_hass(self):
         """Handle added to Hass."""
