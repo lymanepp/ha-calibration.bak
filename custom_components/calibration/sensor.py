@@ -30,6 +30,7 @@ _LOGGER = logging.getLogger(__name__)
 ATTR_COEFFICIENTS = "coefficients"
 ATTR_SOURCE = "source"
 ATTR_SOURCE_ATTRIBUTE = "source_attribute"
+ATTR_SOURCE_VALUE = "source_value"
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -130,6 +131,7 @@ class CalibrationSensor(SensorEntity):
         """Return the state attributes of the sensor."""
         ret = {
             ATTR_SOURCE: self._source_entity_id,
+            ATTR_SOURCE_VALUE: self._source_value,
             ATTR_COEFFICIENTS: self._coefficients,
         }
         if self._source_attribute:
@@ -164,12 +166,12 @@ class CalibrationSensor(SensorEntity):
 
         try:
             if self._source_attribute:
-                value = float(new_state.attributes.get(self._source_attribute))
+                self._source_value = float(new_state.attributes.get(self._source_attribute))
             else:
-                value = (
+                self._source_value = (
                     None if new_state.state == STATE_UNKNOWN else float(new_state.state)
                 )
-            self._state = round(self._poly(value), self._precision)
+            self._state = round(self._poly(self._source_value), self._precision)
 
         except (ValueError, TypeError):
             self._state = None
