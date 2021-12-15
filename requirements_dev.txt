@@ -1,1 +1,2 @@
 homeassistant
+numpy==1.21.4
