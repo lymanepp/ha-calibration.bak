@@ -92,6 +92,7 @@ class CalibrationSensor(SensorEntity):
         self._poly = polynomial
         self._coefficients = polynomial.coefficients.tolist()
         self._state = None
+        self._source_value = None
         self._unique_id = unique_id
         self._name = name
         self.entity_id = entity_id
