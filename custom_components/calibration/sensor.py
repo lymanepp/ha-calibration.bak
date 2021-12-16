@@ -45,11 +45,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     entity_id = f"{DOMAIN}.{calibration}"
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
-    name = conf.get(CONF_FRIENDLY_NAME)
-    if not name:
-        name = f"{DEFAULT_NAME} {source}"
-        if attribute is not None:
-            name = f"{name} {attribute}"
+    name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace('_', ' ').title()
 
     async_add_entities(
         [
