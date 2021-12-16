@@ -43,9 +43,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     unique_id = conf.get(CONF_UNIQUE_ID) or calibration
     entity_id = f"{DOMAIN}.{calibration}"
+    name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace('_', ' ').title()
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
-    name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace('_', ' ').title()
 
     async_add_entities(
         [
@@ -80,18 +80,19 @@ class CalibrationSensor(SensorEntity):
         unit_of_measurement,
     ):
         """Initialize the Calibration sensor."""
+        self._unique_id = unique_id
+        self.entity_id = entity_id
+        self._name = name
         self._source_entity_id = source
-        self._precision = precision
         self._source_attribute = attribute
+        self._precision = precision
+        self._poly = polynomial
         self._device_class = device_class
         self._unit_of_measurement = unit_of_measurement
-        self._poly = polynomial
+
         self._coefficients = polynomial.coefficients.tolist()
         self._state = None
         self._source_value = None
-        self._unique_id = unique_id
-        self._name = name
-        self.entity_id = entity_id
 
     async def async_added_to_hass(self):
         """Handle added to Hass."""
