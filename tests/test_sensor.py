@@ -150,14 +150,14 @@ async def test_numpy_errors(hass, caplog):
     config = {
         "compensation": {
             "test": {
-                "source": "sensor.uncompensated",
+                "source": "sensor.uncalibrated",
                 "data_points": [
                     [1.0, 1.0],
                     [1.0, 1.0],
                 ],
             },
             "test2": {
-                "source": "sensor.uncompensated2",
+                "source": "sensor.uncalibrated2",
                 "data_points": [
                     [0.0, 1.0],
                     [0.0, 1.0],

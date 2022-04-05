@@ -1,10 +1,10 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
-	"image": "lymanepp/container:integration-debian",
-	"name": "Home Assistant Calibration integration development",
+	"image": "ghcr.io/ludeeus/devcontainer/integration:stable",
+	"name": "calibration development",
 	"context": "..",
 	"appPort": [
-		"9123:8123"
+		"8123:8123"
 	],
 	"postCreateCommand": "container install",
 	"extensions": [

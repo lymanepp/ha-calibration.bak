@@ -21,7 +21,6 @@ from .const import (
     CONF_POLYNOMIAL,
     CONF_PRECISION,
     DATA_CALIBRATION,
-    DEFAULT_NAME,
     DOMAIN,
 )
 
@@ -33,7 +32,9 @@ ATTR_SOURCE_ATTRIBUTE = "source_attribute"
 ATTR_SOURCE_VALUE = "source_value"
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_platform(
+    hass, config, async_add_entities, discovery_info=None
+):  # pylint: disable=unused-argument
     """Set up the Calibration sensor."""
     if discovery_info is None:
         return
@@ -43,7 +44,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     unique_id = conf.get(CONF_UNIQUE_ID) or calibration
     entity_id = f"{DOMAIN}.{calibration}"
-    name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace('_', ' ').title()
+    name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace("_", " ").title()
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
 
@@ -64,7 +65,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     )
 
 
-class CalibrationSensor(SensorEntity):
+class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attributes
     """Representation of a Calibration sensor."""
 
     def __init__(
@@ -78,7 +79,7 @@ class CalibrationSensor(SensorEntity):
         polynomial,
         device_class,
         unit_of_measurement,
-    ):
+    ):  # pylint: disable=too-many-arguments
         """Initialize the Calibration sensor."""
         self._unique_id = unique_id
         self.entity_id = entity_id
@@ -154,9 +155,7 @@ class CalibrationSensor(SensorEntity):
 
         if self._source_attribute is None:
             if self._device_class is None:
-                self._device_class = new_state.attributes.get(
-                    ATTR_DEVICE_CLASS
-                )
+                self._device_class = new_state.attributes.get(ATTR_DEVICE_CLASS)
             if self._unit_of_measurement is None:
                 self._unit_of_measurement = new_state.attributes.get(
                     ATTR_UNIT_OF_MEASUREMENT
@@ -164,7 +163,9 @@ class CalibrationSensor(SensorEntity):
 
         try:
             if self._source_attribute:
-                self._source_value = float(new_state.attributes.get(self._source_attribute))
+                self._source_value = float(
+                    new_state.attributes.get(self._source_attribute)
+                )
             else:
                 self._source_value = (
                     None if new_state.state == STATE_UNKNOWN else float(new_state.state)

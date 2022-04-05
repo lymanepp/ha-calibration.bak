@@ -1,2 +1,7 @@
-pytest-homeassistant-custom-component==0.4.0
+pytest-homeassistant-custom-component==0.4.8
+homeassistant-stubs==2021.11.1
+voluptuous-stubs
 numpy==1.21.4
+black
+isort
+mypy
