@@ -1,23 +1,19 @@
 name: HACS
 
+# yamllint disable-line rule:truthy
 on:
   push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
-  validate:
+  hacs:
+    name: HACS Action
     runs-on: "ubuntu-latest"
-    name: HACS
     steps:
-        - uses: "actions/checkout@v2"
-
-        - name: HACS validation
-          uses: "hacs/action@main"
-          with:
-            category: "integration"
-            ignore: brands
-
-        - name: Hassfest validation
-          uses: "home-assistant/actions/hassfest@master"
+      - uses: "actions/checkout@v2"
+      - name: HACS Action
+        uses: "hacs/action@main"
+        with:
+          category: "integration"

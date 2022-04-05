@@ -3,8 +3,12 @@
   "name": "Sensor Calibration",
   "documentation": "https://github.com/lymanepp/ha-calibration",
   "issue_tracker": "https://github.com/lymanepp/ha-calibration/issues",
-  "version": "0.0.0",
-  "requirements": ["numpy==1.21.4"],
-  "codeowners": ["@lymanepp"],
+  "version": "0.1.0",
+  "requirements": [
+    "numpy==1.21.4"
+  ],
+  "codeowners": [
+    "@lymanepp"
+  ],
   "iot_class": "calculated"
 }
