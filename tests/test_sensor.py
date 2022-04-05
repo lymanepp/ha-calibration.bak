@@ -1,7 +1,5 @@
 """The tests for the integration sensor platform."""
 
-from homeassistant.components.compensation.const import CONF_PRECISION, DOMAIN
-from homeassistant.components.compensation.sensor import ATTR_COEFFICIENTS
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.const import (
     ATTR_UNIT_OF_MEASUREMENT,
@@ -10,6 +8,9 @@ from homeassistant.const import (
     STATE_UNKNOWN,
 )
 from homeassistant.setup import async_setup_component
+
+from custom_components.calibration.const import CONF_PRECISION, DOMAIN
+from custom_components.calibration.sensor import ATTR_COEFFICIENTS
 
 
 async def test_linear_state(hass):
