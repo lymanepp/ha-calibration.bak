@@ -20,12 +20,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-from .const import (
-    CONF_CALIBRATION,
-    CONF_POLYNOMIAL,
-    CONF_PRECISION,
-    DATA_CALIBRATION,
-)
+from .const import CONF_CALIBRATION, CONF_POLYNOMIAL, CONF_PRECISION, DATA_CALIBRATION
 
 _LOGGER = logging.getLogger(__name__)
 
