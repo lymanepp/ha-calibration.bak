@@ -1,4 +1,6 @@
 """Support for calibration sensor."""
+from __future__ import annotations
+
 import logging
 
 from homeassistant.components.sensor import SensorEntity
@@ -13,8 +15,10 @@ from homeassistant.const import (
     CONF_UNIT_OF_MEASUREMENT,
     STATE_UNKNOWN,
 )
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import (
     CONF_CALIBRATION,
@@ -33,8 +37,11 @@ ATTR_SOURCE_VALUE = "source_value"
 
 
 async def async_setup_platform(
-    hass, config, async_add_entities, discovery_info=None
-):  # pylint: disable=unused-argument
+    hass: HomeAssistant,
+    config: ConfigType,  # pylint: disable=unused-argument
+    async_add_entities: AddEntitiesCallback,
+    discovery_info: DiscoveryInfoType = None,
+):
     """Set up the Calibration sensor."""
     if discovery_info is None:
         return
@@ -70,15 +77,15 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
 
     def __init__(
         self,
-        unique_id,
-        entity_id,
-        name,
-        source,
-        attribute,
-        precision,
+        unique_id: str,
+        entity_id: str,
+        name: str,
+        source: str,
+        attribute: str | None,
+        precision: int,
         polynomial,
-        device_class,
-        unit_of_measurement,
+        device_class: str,
+        unit_of_measurement: str,
     ):  # pylint: disable=too-many-arguments
         """Initialize the Calibration sensor."""
         self._unique_id = unique_id
@@ -92,8 +99,8 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
         self._unit_of_measurement = unit_of_measurement
 
         self._coefficients = polynomial.coefficients.tolist()
-        self._state = None
-        self._source_value = None
+        self._state: float | None = None
+        self._source_value: float | None = None
 
     async def async_added_to_hass(self):
         """Handle added to Hass."""
