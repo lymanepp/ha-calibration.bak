@@ -24,7 +24,6 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from .const import (
     ATTR_COEFFICIENTS,
     ATTR_SOURCE,
-    ATTR_SOURCE_ATTRIBUTE,
     ATTR_SOURCE_VALUE,
     CONF_CALIBRATION,
     CONF_POLYNOMIAL,
@@ -96,13 +95,10 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
         self._poly = polynomial
 
         self._attr_extra_state_attributes = {
-            ATTR_COEFFICIENTS: polynomial.coefficients.tolist(),
-            ATTR_SOURCE: source,
-            ATTR_SOURCE_ATTRIBUTE: attribute,
             ATTR_SOURCE_VALUE: None,
+            ATTR_SOURCE: f"{source}@{attribute}" if attribute else source,
+            ATTR_COEFFICIENTS: polynomial.coefficients.tolist(),
         }
-        if not attribute:
-            del self._attr_extra_state_attributes[ATTR_SOURCE_ATTRIBUTE]
 
     async def async_added_to_hass(self) -> None:
         """Handle added to Hass."""

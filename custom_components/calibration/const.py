@@ -13,7 +13,6 @@ DATA_CALIBRATION = "calibration_data"
 
 ATTR_COEFFICIENTS = "coefficients"
 ATTR_SOURCE = "source"
-ATTR_SOURCE_ATTRIBUTE = "source_attribute"
 ATTR_SOURCE_VALUE = "source_value"
 
 DEFAULT_DEGREE = 1
