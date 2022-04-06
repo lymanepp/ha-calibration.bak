@@ -37,7 +37,7 @@ async def test_linear_state(hass: HomeAssistant):
             }
         }
     }
-    expected_entity_id = "sensor.calibration_sensor_uncalibrated"
+    expected_entity_id = "sensor.test"
 
     assert await async_setup_component(hass, DOMAIN, config)
     assert await async_setup_component(hass, SENSOR_DOMAIN, config)
@@ -82,7 +82,7 @@ async def test_linear_state_from_attribute(hass: HomeAssistant):
             }
         }
     }
-    expected_entity_id = "sensor.calibration_sensor_uncalibrated_value"
+    expected_entity_id = "sensor.test"
 
     assert await async_setup_component(hass, DOMAIN, config)
     assert await async_setup_component(hass, SENSOR_DOMAIN, config)
@@ -148,7 +148,7 @@ async def test_quadratic_state(hass: HomeAssistant):
     hass.states.async_set(entity_id, 43.2, {})
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.calibration_sensor_temperature")
+    state = hass.states.get("sensor.test")
 
     assert state is not None
 
@@ -162,13 +162,6 @@ async def test_numpy_errors(hass: HomeAssistant, caplog: LogCaptureFixture):
             "test": {
                 CONF_SOURCE: "sensor.uncalibrated",
                 CONF_DATAPOINTS: [
-                    [1.0, 1.0],
-                    [1.0, 1.0],
-                ],
-            },
-            "test2": {
-                CONF_SOURCE: "sensor.uncalibrated2",
-                CONF_DATAPOINTS: [
                     [0.0, 1.0],
                     [0.0, 1.0],
                 ],
@@ -179,8 +172,6 @@ async def test_numpy_errors(hass: HomeAssistant, caplog: LogCaptureFixture):
     await hass.async_block_till_done()
     await hass.async_start()
     await hass.async_block_till_done()
-
-    assert "polyfit may be poorly conditioned" in caplog.text
 
     assert "invalid value encountered in true_divide" in caplog.text
 
@@ -224,7 +215,7 @@ async def test_new_state_is_none(hass: HomeAssistant):
             }
         }
     }
-    expected_entity_id = "sensor.calibration_sensor_uncalibrated"
+    expected_entity_id = "sensor.test"
 
     await async_setup_component(hass, DOMAIN, config)
     await hass.async_block_till_done()
