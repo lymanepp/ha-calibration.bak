@@ -29,6 +29,7 @@ from .const import (
     CONF_POLYNOMIAL,
     CONF_PRECISION,
     DATA_CALIBRATION,
+    DOMAIN,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -47,7 +48,7 @@ async def async_setup_platform(
     calibration = discovery_info[CONF_CALIBRATION]
     conf = hass.data[DATA_CALIBRATION][calibration]
 
-    unique_id = conf.get(CONF_UNIQUE_ID) or calibration
+    unique_id = f"{DOMAIN}_{conf.get(CONF_UNIQUE_ID) or calibration}"
     name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace("_", " ").title()
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
