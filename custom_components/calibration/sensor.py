@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import logging
 
-from homeassistant.components.sensor import SensorEntity, DOMAIN as SENSOR_DOMAIN
+from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import (
     ATTR_DEVICE_CLASS,
     ATTR_UNIT_OF_MEASUREMENT,
