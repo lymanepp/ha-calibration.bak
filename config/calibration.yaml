@@ -1,5 +1,5 @@
-test_temperature:
-  source: sensor.test_uncalibrated_temperature
+calibrated_temperature:
+  source: sensor.uncalibrated_temperature
   degree: 1
   data_points:
     - [64.44, 64.1]
@@ -7,8 +7,8 @@ test_temperature:
     - [76.64, 76.6]
     - [78.01, 78.4]
 
-test_humidity:
-  source: sensor.test_uncalibrated_humidity
+calibrated_humidity:
+  source: sensor.uncalibrated_humidity
   degree: 1
   data_points:
     - [38.68, 32.0]
