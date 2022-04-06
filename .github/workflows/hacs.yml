@@ -3,9 +3,9 @@ name: HACS
 # yamllint disable-line rule:truthy
 on:
   push:
+    branches: [ master ]
   pull_request:
-  schedule:
-    - cron: "0 0 * * *"
+    branches: [ master ]
 
 jobs:
   hacs:

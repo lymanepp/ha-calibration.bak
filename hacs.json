@@ -1,9 +1,9 @@
 {
     "name": "Sensor Calibration",
-    "hacs": "1.6.0",
+    "content_in_root": false,
+    "render_readme": true,
     "domains": [
-        "calibration",
         "sensor"
     ],
-    "homeassistant": "0.118.0"
+    "iot_class": "Calculated"
 }
