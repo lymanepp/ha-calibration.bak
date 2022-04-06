@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorEntity, DOMAIN as SENSOR_DOMAIN
 from homeassistant.const import (
     ATTR_DEVICE_CLASS,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -29,7 +29,6 @@ from .const import (
     CONF_POLYNOMIAL,
     CONF_PRECISION,
     DATA_CALIBRATION,
-    DOMAIN,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -48,7 +47,7 @@ async def async_setup_platform(
     calibration = discovery_info[CONF_CALIBRATION]
     conf = hass.data[DATA_CALIBRATION][calibration]
 
-    unique_id = f"{DOMAIN}_{conf.get(CONF_UNIQUE_ID) or calibration}"
+    unique_id = f"{SENSOR_DOMAIN}.{conf.get(CONF_UNIQUE_ID) or calibration}"
     name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace("_", " ").title()
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
@@ -139,15 +138,18 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
             )
             self._attr_native_value = round(self._poly(source_value), self._precision)
             self._attr_extra_state_attributes[ATTR_SOURCE_VALUE] = source_value
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as error:
             self._attr_native_value = None
             if self._source_attribute:
                 _LOGGER.warning(
-                    "%s attribute %s is not a number",
+                    "%s attribute %s is not a number: %s",
                     self._source_entity_id,
                     self._source_attribute,
+                    error,
                 )
             else:
-                _LOGGER.warning("%s state is not a number", self._source_entity_id)
+                _LOGGER.warning(
+                    "%s state is not a number: %s", self._source_entity_id, error
+                )
 
         self.async_write_ha_state()

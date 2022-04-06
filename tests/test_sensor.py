@@ -22,7 +22,7 @@ from custom_components.calibration.const import (
 from custom_components.calibration.sensor import ATTR_COEFFICIENTS
 
 
-async def test_linear_state(hass: HomeAssistant):
+async def test_linear_state(hass: HomeAssistant, caplog: LogCaptureFixture):
     """Test calibration sensor state."""
     config = {
         DOMAIN: {
@@ -60,6 +60,8 @@ async def test_linear_state(hass: HomeAssistant):
 
     hass.states.async_set(entity_id, "foo", {})
     await hass.async_block_till_done()
+
+    assert "could not convert string to float: 'foo'" in caplog.text
 
     state = hass.states.get(expected_entity_id)
     assert state is not None
