@@ -15,19 +15,23 @@ from homeassistant.const import (
     CONF_UNIT_OF_MEASUREMENT,
     STATE_UNKNOWN,
 )
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-from .const import CONF_CALIBRATION, CONF_POLYNOMIAL, CONF_PRECISION, DATA_CALIBRATION
+from .const import (
+    ATTR_COEFFICIENTS,
+    ATTR_SOURCE,
+    ATTR_SOURCE_ATTRIBUTE,
+    ATTR_SOURCE_VALUE,
+    CONF_CALIBRATION,
+    CONF_POLYNOMIAL,
+    CONF_PRECISION,
+    DATA_CALIBRATION,
+)
 
 _LOGGER = logging.getLogger(__name__)
-
-ATTR_COEFFICIENTS = "coefficients"
-ATTR_SOURCE = "source"
-ATTR_SOURCE_ATTRIBUTE = "source_attribute"
-ATTR_SOURCE_VALUE = "source_value"
 
 
 async def async_setup_platform(
@@ -110,7 +114,7 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
         )
 
     @callback
-    def _async_calibration_sensor_state_listener(self, event) -> None:
+    def _async_calibration_sensor_state_listener(self, event: Event) -> None:
         """Handle sensor state changes."""
         if (new_state := event.data.get("new_state")) is None:
             return
