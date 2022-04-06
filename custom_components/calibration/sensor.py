@@ -25,7 +25,6 @@ from .const import (
     CONF_POLYNOMIAL,
     CONF_PRECISION,
     DATA_CALIBRATION,
-    DOMAIN,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -40,8 +39,8 @@ async def async_setup_platform(
     hass: HomeAssistant,
     config: ConfigType,  # pylint: disable=unused-argument
     async_add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType = None,
-):
+    discovery_info: DiscoveryInfoType | None = None,
+) -> None:
     """Set up the Calibration sensor."""
     if discovery_info is None:
         return
@@ -50,7 +49,6 @@ async def async_setup_platform(
     conf = hass.data[DATA_CALIBRATION][calibration]
 
     unique_id = conf.get(CONF_UNIQUE_ID) or calibration
-    entity_id = f"{DOMAIN}.{calibration}"
     name = conf.get(CONF_FRIENDLY_NAME) or calibration.replace("_", " ").title()
     source = conf[CONF_SOURCE]
     attribute = conf.get(CONF_ATTRIBUTE)
@@ -59,7 +57,6 @@ async def async_setup_platform(
         [
             CalibrationSensor(
                 unique_id,
-                entity_id,
                 name,
                 source,
                 attribute,
@@ -78,7 +75,6 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
     def __init__(
         self,
         unique_id: str,
-        entity_id: str,
         name: str,
         source: str,
         attribute: str | None,
@@ -88,21 +84,27 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
         unit_of_measurement: str,
     ):  # pylint: disable=too-many-arguments
         """Initialize the Calibration sensor."""
-        self._unique_id = unique_id
-        self.entity_id = entity_id
-        self._name = name
+        self._attr_unique_id = unique_id
+        self._attr_name = name
+        self._attr_device_class = device_class
+        self._attr_native_unit_of_measurement = unit_of_measurement
+        self._attr_should_poll = False
+
         self._source_entity_id = source
         self._source_attribute = attribute
         self._precision = precision
         self._poly = polynomial
-        self._device_class = device_class
-        self._unit_of_measurement = unit_of_measurement
 
-        self._coefficients = polynomial.coefficients.tolist()
-        self._state: float | None = None
-        self._source_value: float | None = None
+        self._attr_extra_state_attributes = {
+            ATTR_COEFFICIENTS: polynomial.coefficients.tolist(),
+            ATTR_SOURCE: source,
+            ATTR_SOURCE_ATTRIBUTE: attribute,
+            ATTR_SOURCE_VALUE: None,
+        }
+        if not attribute:
+            del self._attr_extra_state_attributes[ATTR_SOURCE_ATTRIBUTE]
 
-    async def async_added_to_hass(self):
+    async def async_added_to_hass(self) -> None:
         """Handle added to Hass."""
         self.async_on_remove(
             async_track_state_change_event(
@@ -112,82 +114,40 @@ class CalibrationSensor(SensorEntity):  # pylint: disable=too-many-instance-attr
             )
         )
 
-    @property
-    def unique_id(self):
-        """Return the unique id of this sensor."""
-        return self._unique_id
-
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def should_poll(self):
-        """No polling needed."""
-        return False
-
-    @property
-    def native_value(self):
-        """Return the state of the sensor."""
-        return self._state
-
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes of the sensor."""
-        ret = {
-            ATTR_SOURCE: self._source_entity_id,
-            ATTR_SOURCE_VALUE: self._source_value,
-            ATTR_COEFFICIENTS: self._coefficients,
-        }
-        if self._source_attribute:
-            ret[ATTR_SOURCE_ATTRIBUTE] = self._source_attribute
-        return ret
-
-    @property
-    def device_class(self):
-        """Return the class of this entity."""
-        return self._device_class
-
-    @property
-    def native_unit_of_measurement(self):
-        """Return the unit the value is expressed in."""
-        return self._unit_of_measurement
-
     @callback
-    def _async_calibration_sensor_state_listener(self, event):
+    def _async_calibration_sensor_state_listener(self, event) -> None:
         """Handle sensor state changes."""
         if (new_state := event.data.get("new_state")) is None:
             return
 
         if self._source_attribute is None:
-            if self._device_class is None:
-                self._device_class = new_state.attributes.get(ATTR_DEVICE_CLASS)
-            if self._unit_of_measurement is None:
-                self._unit_of_measurement = new_state.attributes.get(
+            # Initialize on first state change if not configured
+            if self._attr_device_class is None:
+                self._attr_device_class = new_state.attributes.get(ATTR_DEVICE_CLASS)
+            if self._attr_native_unit_of_measurement is None:
+                self._attr_native_unit_of_measurement = new_state.attributes.get(
                     ATTR_UNIT_OF_MEASUREMENT
                 )
 
         try:
-            if self._source_attribute:
-                self._source_value = float(
-                    new_state.attributes.get(self._source_attribute)
-                )
-            else:
-                self._source_value = (
-                    None if new_state.state == STATE_UNKNOWN else float(new_state.state)
-                )
-            self._state = round(self._poly(self._source_value), self._precision)
-
+            source_value = (
+                float(new_state.attributes.get(self._source_attribute))
+                if self._source_attribute
+                else float(new_state.state)
+                if new_state.state != STATE_UNKNOWN
+                else None
+            )
+            self._attr_native_value = round(self._poly(source_value), self._precision)
+            self._attr_extra_state_attributes[ATTR_SOURCE_VALUE] = source_value
         except (ValueError, TypeError):
-            self._state = None
+            self._attr_native_value = None
             if self._source_attribute:
                 _LOGGER.warning(
-                    "%s attribute %s is not numerical",
+                    "%s attribute %s is not a number",
                     self._source_entity_id,
                     self._source_attribute,
                 )
             else:
-                _LOGGER.warning("%s state is not numerical", self._source_entity_id)
+                _LOGGER.warning("%s state is not a number", self._source_entity_id)
 
         self.async_write_ha_state()
