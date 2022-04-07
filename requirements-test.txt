@@ -3,7 +3,7 @@ homeassistant-stubs==2022.3.8
 isort==5.10.1
 mypy==0.942
 numpy==1.21.4
-pytest-cov==3.0.0
+pytest-cov==2.12.1
 pytest-homeassistant-custom-component==0.7.7
-pytest==7.1.1
+pytest==7.0.1
 voluptuous-stubs==0.1.1
